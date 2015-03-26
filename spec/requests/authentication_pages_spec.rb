@@ -19,18 +19,17 @@ describe "AuthenticationPages" do
 			it { should have_link("Sign out", href: signout_path) }
 			it { should_not have_link("Sign in", href: signin_path) }
 			
+			describe "followed by singnout" do
+				before { click_link "Sign out" }
+				it { should have_link('Sign in') }
+			end
 		end
 		describe "with invalid information" do
 			before { click_button "Sign in" }
 			
 			it { should have_title('Sign in') }
 			it { should have_selector('div.alert.alert-error', text: 'Invalid') }
-			
-		end
-		
-		describe "followed by signout" do
-			before { click_link "Sign out" }
-			it { should have_link('Sign in') }
+
 		end
 	end
 	
