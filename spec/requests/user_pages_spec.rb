@@ -68,7 +68,7 @@ describe "UserPages" do
 	describe "signup" do
 		before{visit signup_path}
 		let(:euser) { FactoryGirl.create(:user) }
-		let(:submit) { "Create my account" }
+		let(:submit) { "Save my account" }
 			describe "with invalid signup" do
 				it "should not create a user" do
 					expect{ click_button submit }.not_to change(User, :count)
@@ -114,29 +114,12 @@ describe "UserPages" do
 		end
 		
 		describe "with invalid information" do
-			before{ click_button 'Save changes' }
+			before{ click_button 'Save my account' }
 			
 			it { should have_content('error') }
 		end
 		
 		describe "with valid information" do
-=begin
-		let(:new_user) { {name: "New Name", email: "new@example.com"}
-			before do
-				user_update_fill(new_user,user)
-		        fill_in "Name",             with: new_name
-				fill_in "Email",            with: new_email
-				fill_in "Password",         with: user.password
-				fill_in "Confirm Password", with: user.password
-				click_button 'Save changes'
-			end
-			
-			it { should have_title(new_user[:name]) }
-			it { should have_selector('div.alert.alert-success') }
-			it { should have_link('Sign out', href: signout_path) }
-			specify { expect(user.reload.name).to eq new_user[:name] }
-			specify { expect(user.reload.email).to eq new_user[:email] }
-=end
 			
 			let(:new_name)  { "New Name" }
 			let(:new_email) { "new@example.com" }
@@ -144,8 +127,8 @@ describe "UserPages" do
 				fill_in "Name",             with: new_name
 				fill_in "Email",            with: new_email
 				fill_in "Password",         with: user.password
-				fill_in "Confirm Password", with: user.password
-				click_button "Save changes"
+				fill_in "Confirmation", with: user.password
+				click_button "Save my account"
 			end
 
 			it { should have_title(new_name) }
@@ -154,7 +137,18 @@ describe "UserPages" do
 			specify { expect(user.reload.name).to  eq new_name }
 			specify { expect(user.reload.email).to eq new_email }
 		end
-
+		
+		describe "forbidden attributes" do
+			let(:params) do
+				{ user: { admin: true, password: user.password,
+						  password_confirmation: user.password } }
+			end
+			before do
+				sign_in user, no_capybara: true
+				patch user_path(user), params
+			end
+			specify { expect(user.reload).not_to be_admin }
+		end
 		
 	end
 	
