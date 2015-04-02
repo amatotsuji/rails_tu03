@@ -52,9 +52,7 @@ describe "Static pages" do
 				it { should have_link("1 followers", href: followers_user_path(user)) }
 				
 			end
-			
 		end
-		
 	end
 	
 	describe "Help page" do

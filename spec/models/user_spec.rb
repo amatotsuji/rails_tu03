@@ -210,6 +210,8 @@ describe "User" do
 			its(:followers) { should include(@user) }
 		end
 		
+		
+		
 	end
 	
 end
